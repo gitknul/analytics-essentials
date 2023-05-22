@@ -9,7 +9,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'Analytics Bundle',
       // the proper extensions will be added
-      fileName: 'analytics',
+      fileName: 'analytics-essentials',
     },
   },
   plugins: [dts({ insertTypesEntry: true })],
