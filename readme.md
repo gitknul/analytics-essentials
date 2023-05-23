@@ -1,8 +1,21 @@
 # FH Analytics Essentials
 
+## Getting started
+
+### Install via NPM
+
+```bash
+npm i @freshheads/analytics-essentials
+```
+
+### Setup Google Tag or Google Tagmanager
+
+- [Gtag Setup](doc/gtag_setup.md)
+- [Tagmanager Setup](doc/tagmanager_setup.md)
+
 ## Usage
 
-### With GTag
+### With gtag
 
 ```js
 import {
@@ -19,7 +32,7 @@ const trackEvents = {
 };
 ```
 
-### With TagManager
+### With Tagmanager
 
 ```js
 import { pushDataLayer, EventTypes } from '@freshheads/analytics-essentials';
