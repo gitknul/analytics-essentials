@@ -33,14 +33,15 @@ type ClickEventType = {
 };
 
 type SubmitEventType = {
-  type: EventTypes.CLICK;
+  type: EventTypes.SUBMIT;
   context?: ContextType;
 };
 
-export type TrackEventPropsType =
+export type TrackEventPropsType = { name: string } & (
   | PurchaseEventType
   | ClickEventType
-  | SubmitEventType;
+  | SubmitEventType
+);
 
 export type TagManagerTrackEventPropsType = TrackEventPropsType & {
   clear?: boolean;
