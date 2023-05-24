@@ -43,6 +43,6 @@ export type TrackEventPropsType = { name: string } & (
   | SubmitEventType
 );
 
-export type TagManagerTrackEventPropsType = TrackEventPropsType & {
+export type PushDataLayerPropsType = TrackEventPropsType & {
   clear?: boolean;
 };

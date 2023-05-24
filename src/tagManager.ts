@@ -1,5 +1,5 @@
 import { NODE_ENV_DEVELOPMENT } from './constants';
-import { TagManagerTrackEventPropsType } from './types';
+import { PushDataLayerPropsType } from './types';
 
 const isAvailable = (): boolean => {
   // check for SSR
@@ -19,15 +19,19 @@ const isAvailable = (): boolean => {
   return true; // TagManager available
 };
 
-export const pushTrackingEvent = (props: TagManagerTrackEventPropsType) => {
+/**
+ * @example
+ * pushDataLayer({type: EventTypes.CLICK, name: '', context: {param: ''}, clear: false})
+ */
+export const pushDataLayer = (props: PushDataLayerPropsType) => {
   if (!isAvailable()) return;
   const dataLayer = (window as any).dataLayer;
 
-  const { type, context, clear = true } = props;
+  const { type, name, context, clear = true } = props;
 
   dataLayer.push({
     event: type,
-    action: type,
+    action: name,
     context,
     _clear: clear,
   });

@@ -20,11 +20,15 @@ const isAvailable = (): boolean => {
   return true; // gtag available
 };
 
+/**
+ * @example
+ * pushTrackingEvent({type: EventTypes.CLICK, name: '', context: {param: ''}})
+ */
 export const pushTrackingEvent = (props: TrackEventPropsType) => {
   if (!isAvailable()) return;
   const gtag = window.gtag;
 
-  const { type, context } = props;
+  const { name, context } = props;
 
-  gtag('event', type, { context });
+  gtag('event', name, { context });
 };
