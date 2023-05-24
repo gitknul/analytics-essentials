@@ -46,3 +46,10 @@ export type TrackEventPropsType = { name: string } & (
 export type PushDataLayerPropsType = TrackEventPropsType & {
   clear?: boolean;
 };
+
+type ConsentCookieOption = 'granted' | 'denied';
+
+export type CookieConsentOptions = {
+  ad_storage?: ConsentCookieOption;
+  analytics_storage?: ConsentCookieOption;
+};

@@ -1,18 +1,14 @@
 import Script from 'next/script';
 import { FC } from 'react';
-
-type ConsentCookieOption = 'granted' | 'denied';
+import { CookieConsentOptions } from '../types';
 
 type LoadGA4Props = {
   measurementID: string;
   debug?: boolean;
-  defaultConsent?: {
-    ad_storage?: ConsentCookieOption;
-    analytics_storage?: ConsentCookieOption;
-  };
+  defaultConsent?: CookieConsentOptions;
 };
 
-const defaultConsentSettings = {
+const defaultConsentSettings: CookieConsentOptions = {
   ['ad_storage']: 'denied',
   ['analytics_storage']: 'denied',
 };
