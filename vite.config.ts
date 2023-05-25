@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,6 +12,7 @@ export default defineConfig({
       // the proper extensions will be added
       fileName: 'analytics-essentials',
     },
+    rollupOptions: { external: ['react'] },
   },
-  plugins: [dts({ insertTypesEntry: true })],
+  plugins: [react(), dts({ insertTypesEntry: true })],
 });
