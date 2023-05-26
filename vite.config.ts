@@ -5,14 +5,16 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
-    lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'Analytics Bundle',
-      // the proper extensions will be added
-      fileName: 'analytics-essentials',
+    build: {
+        outDir: 'dist',
+        lib: {
+            entry: [
+                resolve(__dirname, 'src/index.ts'),
+                resolve(__dirname, 'src/next/next.ts'),
+            ],
+            name: 'Analytics Essentials',
+        },
+        rollupOptions: { external: ['react'] },
     },
-    rollupOptions: { external: ['react'] },
-  },
-  plugins: [react(), dts({ insertTypesEntry: true })],
+    plugins: [react(), dts()],
 });
