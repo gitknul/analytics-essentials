@@ -1,6 +1,6 @@
 import Script from 'next/script';
 import { FC } from 'react';
-import { CookieConsentOptions } from '../../types';
+import { CookieConsentOptions } from '../types';
 
 type LoadGA4Props = {
     measurementID: string;

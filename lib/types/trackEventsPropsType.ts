@@ -1,8 +1,4 @@
-export enum EventTypes {
-    CLICK = 'click',
-    PURCHASE = 'purchase',
-    SUBMIT = 'submit',
-}
+import { EventTypes } from './events';
 
 type ContextType = {
     [index: string]: string | number | object;
@@ -54,11 +50,4 @@ export type TrackEventPropsType = { name: string } & (
 
 export type PushDataLayerPropsType = TrackEventPropsType & {
     clear?: boolean;
-};
-
-type ConsentCookieOption = 'granted' | 'denied';
-
-export type CookieConsentOptions = {
-    ad_storage?: ConsentCookieOption;
-    analytics_storage?: ConsentCookieOption;
 };
