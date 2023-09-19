@@ -9,12 +9,11 @@ export const pushDataLayerEvent = (props: PushDataLayerPropsType) => {
     if (!isDataLayerAvailable()) return;
     const dataLayer = (window as any).dataLayer;
 
-    const { type, name, context, clear = true } = props;
+    const { name, context, clear = true } = props;
 
     dataLayer.push({
-        event: type,
-        action: name,
-        context,
+        event: name,
+        ...context,
         _clear: clear,
     });
 };

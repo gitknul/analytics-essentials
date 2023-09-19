@@ -5,7 +5,7 @@ type ContextType = {
 };
 
 type PurchaseEventType = {
-    type: EventTypes.PURCHASE;
+    name: EventTypes.PURCHASE;
     context: {
         currency: string;
         transaction_id: string;
@@ -33,19 +33,36 @@ type PurchaseEventType = {
 };
 
 type ClickEventType = {
-    type: EventTypes.CLICK;
+    name: EventTypes.CLICK;
     context?: ContextType;
 };
 
 type SubmitEventType = {
-    type: EventTypes.SUBMIT;
+    name: EventTypes.SUBMIT;
     context?: ContextType;
+};
+
+type CustomEventType = {
+    name: string;
+    context?: ContextType;
+};
+
+type GenericEventType = {
+    name: EventTypes.GENERIC; // A generic event for a catch all in GA4
+    context: {
+        label: string; // display name instead of custom_event e.g. funnel
+        category: string; // e.g. productPage
+        action?: string; // viewedStep
+        value?: string | number; // e.g. step-1
+    };
 };
 
 export type TrackEventPropsType = { name: string } & (
     | PurchaseEventType
     | ClickEventType
     | SubmitEventType
+    | CustomEventType
+    | GenericEventType
 );
 
 export type PushDataLayerPropsType = TrackEventPropsType & {
