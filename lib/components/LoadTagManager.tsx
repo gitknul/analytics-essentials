@@ -1,16 +1,16 @@
 import Script from 'next/script';
 import { FC } from 'react';
 
-type LoadTagmanagerProps = {
+type LoadTagManagerProps = {
     measurementID: string;
 };
 
 /**
  * @param {string} props.measurementID - GTM-XXXXXXX
  * @example
- * <LoadTagmanager measurementID='GTM-MK12345' />
+ * <LoadTagManager measurementID='GTM-MK12345' />
  */
-export const LoadTagmanager: FC<LoadTagmanagerProps> = ({ measurementID }) => {
+export const LoadTagManager: FC<LoadTagManagerProps> = ({ measurementID }) => {
     return (
         <>
             <Script id="google-tag-manager" strategy="afterInteractive">
