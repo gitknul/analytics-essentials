@@ -3,13 +3,12 @@ import { isGtagAvailable } from './isGtagAvailable';
 
 /**
  * @example
- * pushTrackingEvent({type: EventTypes.CLICK, name: '', context: {param: ''}})
+ * pushGaEvent(EventTypes.CLICK, undefined)
+ * pushGaEvent(EventTypes.GENERIC, { label: '', category: '' })
  */
-export const pushGaEvent = (props: TrackEventPropsType) => {
+export const pushGaEvent: TrackEventPropsType = (name, context) => {
     if (!isGtagAvailable()) return;
     const gtag = window.gtag;
-
-    const { name, context } = props;
 
     gtag('event', name, { context });
 };
