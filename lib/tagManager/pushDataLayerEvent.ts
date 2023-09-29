@@ -13,7 +13,7 @@ export const pushDataLayerEvent = (props: PushDataLayerPropsType) => {
 
     dataLayer.push({
         event: name,
-        ...context,
+        context,
         _clear: clear,
     });
 };
