@@ -16,7 +16,7 @@ export const pushDataLayerEvent: TrackEventPropsType = (
 
     dataLayer.push({
         event: name,
-        ...context,
+        context,
         _clear: clear,
     });
 };
