@@ -9,7 +9,7 @@ import { isDataLayerAvailable } from './isDataLayerAvailable';
 export const pushDataLayerEvent: TrackEventPropsType = (
     name,
     context,
-    clear = false
+    clear = true
 ) => {
     if (!isDataLayerAvailable()) return;
     const dataLayer = (window as any).dataLayer;
