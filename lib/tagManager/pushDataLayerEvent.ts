@@ -1,15 +1,18 @@
-import { PushDataLayerPropsType } from '../types';
+import { TrackEventPropsType } from '../types';
 import { isDataLayerAvailable } from './isDataLayerAvailable';
 
 /**
  * @example
- * pushDataLayer({type: EventTypes.CLICK, name: '', context: {param: ''}, clear: false})
+ * pushDataLayerEvent(EventTypes.CLICK, undefined, false)
+ * pushDataLayerEvent(EventTypes.GENERIC, { label: '', category: '' })
  */
-export const pushDataLayerEvent = (props: PushDataLayerPropsType) => {
+export const pushDataLayerEvent: TrackEventPropsType = (
+    name,
+    context,
+    clear = true
+) => {
     if (!isDataLayerAvailable()) return;
     const dataLayer = (window as any).dataLayer;
-
-    const { name, context, clear = true } = props;
 
     dataLayer.push({
         event: name,

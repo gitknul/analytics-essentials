@@ -3,4 +3,5 @@ export enum EventTypes {
     PURCHASE = 'purchase',
     SUBMIT = 'submit',
     GENERIC = 'generic_event',
+    CUSTOM = 'custom_event',
 }
