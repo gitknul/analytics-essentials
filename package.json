@@ -1,6 +1,6 @@
 {
     "name": "@freshheads/analytics-essentials",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "keywords": [
         "Analytics",
         "Tag Manager",
@@ -8,9 +8,6 @@
     ],
     "description": "Configure and use Google Analytics and Google Tag Manager in your Next.js app.",
     "type": "module",
-    "files": [
-        "dist"
-    ],
     "types": "dist/main.d.ts",
     "main": "dist/analytics-essentials.cjs",
     "module": "dist/analytics-essentials.js",
