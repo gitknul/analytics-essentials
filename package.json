@@ -1,6 +1,6 @@
 {
     "name": "@freshheads/analytics-essentials",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "keywords": [
         "Analytics",
         "Tag Manager",
@@ -23,7 +23,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
-        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "lint": "eslint lib --ext ts,tsx --report-unused-disable-directives",
         "preview": "vite preview"
     },
     "devDependencies": {
