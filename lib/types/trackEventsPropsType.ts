@@ -44,6 +44,12 @@ interface SubmitEvent {
     context?: ContextType;
 }
 
+interface CookieSettingsChangedEvent {
+    type: EventTypes.COOKIE_SETTINGS_CHANGED;
+    name: string;
+    context?: ContextType;
+}
+
 interface CustomEvent {
     type: EventTypes.CUSTOM;
     name: string;
@@ -65,4 +71,5 @@ export type Event =
     | Clickevent
     | CustomEvent
     | SubmitEvent
+    | CookieSettingsChangedEvent
     | GenericEventType;
