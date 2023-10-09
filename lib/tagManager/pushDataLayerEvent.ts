@@ -1,22 +1,36 @@
-import { TrackEventPropsType } from '../types';
+import { Event } from '../types';
 import { isDataLayerAvailable } from './isDataLayerAvailable';
 
 /**
  * @example
- * pushDataLayerEvent(EventTypes.CLICK, undefined, false)
- * pushDataLayerEvent(EventTypes.GENERIC, { label: '', category: '' })
+ * pushDataLayerEvent({
+ *    type: EventTypes.GENERIC,
+ *    context: {
+ *      label: 'scroll_event', // event name in google analytics
+ *      category: 'blog page',
+ *      action: 'scroll', // optional
+ *      value: '430', // optional
+ * });
+ *
+ * pushDataLayerEvent({
+ *    type: EventTypes.ClICK,
+ *    name: 'hero_banner_button_click',
+ * });
  */
-export const pushDataLayerEvent: TrackEventPropsType = (
-    name,
-    context,
-    clear = true
-) => {
+
+export function pushDataLayerEvent(props: Event, clear: boolean = true): void {
     if (!isDataLayerAvailable()) return;
     const dataLayer = (window as any).dataLayer;
 
+    let name: string = props.type;
+
+    if ('name' in props) {
+        name = props.name;
+    }
+
     dataLayer.push({
         event: name,
-        context,
+        context: props.context,
         _clear: clear,
     });
-};
+}
