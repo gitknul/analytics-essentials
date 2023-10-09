@@ -13,49 +13,47 @@ npm i @freshheads/analytics-essentials
 - [Gtag Setup](doc/gtag_setup.md)
 - [Tagmanager Setup](doc/tagmanager_setup.md)
 
+
 ## Usage
 
 ### With gtag
 
 ```js
 import {
-  pushTrackingEvent,
   EventTypes,
+  pushGaEvent,
 } from '@freshheads/analytics-essentials';
 
-const trackEvents = {
-  heroButtonTrackEvent: () =>
-    pushTrackingEvent({
-      type: EventTypes.CLICK, // EventTypes.SUBMIT | EventTypes.PURCHASE
-      name: 'hero_button_click',
-    }),
-};
+pushGaEvent({ 
+    type: EventTypes.CLICK,
+    name: 'hero_button_click' 
+});
 ```
 
-### With Tagmanager
+### With Tag Manager
 
 ```js
-import { pushDataLayer, EventTypes } from '@freshheads/analytics-essentials';
+import {
+    EventTypes,
+    pushDataLayerEvent,
+} from '@freshheads/analytics-essentials';
 
-const trackEvents = {
-  heroButtonTrackEvent: () =>
-    pushDataLayer({
-      type: EventTypes.CLICK, // EventTypes.SUBMIT | EventTypes.PURCHASE
-      name: 'hero_button_click',
-    }),
-};
+pushDataLayerEvent({
+    type: EventTypes.CLICK,
+    name: 'hero_button_click',
+});
 ```
 
 ## Optional params
 
 ```js
-pushTrackingEvent({
-      type: EventTypes.CLICK,
-      name: 'event_name',
-      context: {
-        // context is typed based on type
-        // you can always extend context with your custom properties
-      }
-    }),
+pushDataLayerEvent({
+    type: EventTypes.CLICK,
+    name: 'hero_button_click',
+    context: {
+      // context is typed based on type
+      // you can always extend context with your custom properties
+    }
+}),
 
 ```
