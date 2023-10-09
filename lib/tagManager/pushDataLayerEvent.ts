@@ -18,7 +18,7 @@ import { isDataLayerAvailable } from './isDataLayerAvailable';
  * });
  */
 
-export function pushDataLayerEvent(props: Event, clear: boolean = true): void {
+export function pushDataLayerEvent(props: Event, clear = true): void {
     if (!isDataLayerAvailable()) return;
     const dataLayer = (window as any).dataLayer;
 
