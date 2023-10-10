@@ -1,4 +1,4 @@
-import { Event } from '../types';
+import { CookieConsentOptions, Event } from '../types';
 import { isGtagAvailable } from './isGtagAvailable';
 
 /**
@@ -24,4 +24,19 @@ export const pushGaEvent = (props: Event) => {
     }
 
     gtag('event', name, { ...props.context });
+};
+
+/**
+ *
+ * @example
+ * pushGaConsent({
+ *  ad_storage: 'granted',
+ *  personalization_storage: 'denied',
+ * });
+ */
+export const pushGaConsent = (props: CookieConsentOptions) => {
+    if (!isGtagAvailable()) return;
+    const gtag = window.gtag;
+
+    gtag('consent', 'update', props);
 };

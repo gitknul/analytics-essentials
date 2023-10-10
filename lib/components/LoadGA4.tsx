@@ -1,6 +1,6 @@
 import Script from 'next/script';
 import { FC } from 'react';
-import { CookieConsentOptions } from '../types';
+import { CookieConsentOptions, CookieConsentValues } from '../types';
 
 type LoadGA4Props = {
     measurementID: string;
@@ -9,8 +9,8 @@ type LoadGA4Props = {
 };
 
 const defaultConsentSettings: CookieConsentOptions = {
-    ['ad_storage']: 'denied',
-    ['analytics_storage']: 'denied',
+    ad_storage: CookieConsentValues.DENIED,
+    analytics_storage: CookieConsentValues.DENIED,
 };
 
 /**
