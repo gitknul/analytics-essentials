@@ -1,8 +1,10 @@
-export enum EventTypes {
+export enum EventType {
     CLICK = 'click',
+    VIEW = 'view',
+    PAGE_VIEW = 'page_view',
     PURCHASE = 'purchase',
     SUBMIT = 'submit',
-    GENERIC = 'generic_event',
-    CUSTOM = 'custom_event',
+    GENERIC = 'generic',
+    CUSTOM = 'custom',
     COOKIE_SETTINGS_CHANGED = 'cookie_settings_changed',
 }
