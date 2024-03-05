@@ -1,8 +1,8 @@
-import React, { createContext } from 'react';
-import { MixpanelEvent } from '../types';
+import React, { createContext, useContext } from 'react';
+import { MixpanelEvent as DTO } from '../types';
 
 interface MixpanelContextProps<DTO> {
-    pushEvent: (event: DTO) => void;
+    trackEvent: (event: DTO) => void;
 }
 
 interface MixpanelProviderProps<DTO> {
@@ -10,29 +10,33 @@ interface MixpanelProviderProps<DTO> {
     eventApiClient: (args: DTO) => Promise<void>;
 }
 
-export const MixpanelProvider = <DTO extends unknown | MixpanelEvent>({
+const MixpanelContext = createContext<MixpanelContextProps<DTO> | null>(null);
+
+export function useMixpanelContext() {
+    const context = useContext(MixpanelContext);
+
+    if (!context) {
+        throw new Error('<MixpanelProvider /> not found');
+    }
+
+    return context;
+}
+
+export function MixpanelProvider({
     children,
     eventApiClient,
-}: MixpanelProviderProps<DTO>) => {
-    const MixpanelContext = createContext<MixpanelContextProps<DTO>>({
-        pushEvent: (event: DTO) => {
-            throw new Error(
-                `${event} not fired - MixpanelContext not provided`
-            );
-        },
-    });
-
-    const pushEvent = (event: DTO) => {
+}: MixpanelProviderProps<DTO>) {
+    const trackEvent = (event: DTO) => {
         eventApiClient(event);
     };
 
     return (
         <MixpanelContext.Provider
             value={{
-                pushEvent,
+                trackEvent,
             }}
         >
             {children}
         </MixpanelContext.Provider>
     );
-};
+}
