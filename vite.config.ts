@@ -14,14 +14,7 @@ export default defineConfig({
         },
         rollupOptions: {
             external: ['react', 'react/jsx-runtime', 'react-dom', 'next'],
-            output: {
-                globals: {
-                    react: 'React',
-                    'react/jsx-runtime': 'react/jsx-runtime',
-                    'react-dom': 'ReactDOM',
-                },
-            },
         },
     },
-    plugins: [react(), dts({ include: ['lib'], rollupTypes: true })],
+    plugins: [react(), dts({ include: ['lib'], outDir: ['dist/types'] })],
 });

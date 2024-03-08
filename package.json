@@ -8,7 +8,7 @@
     ],
     "description": "Configure and use Google Analytics and Google Tag Manager in your Next.js app.",
     "type": "module",
-    "types": "dist/main.d.ts",
+    "types": "dist/types/main.d.ts",
     "main": "dist/analytics-essentials.cjs",
     "module": "dist/analytics-essentials.js",
     "files": [
