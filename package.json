@@ -1,6 +1,6 @@
 {
     "name": "@freshheads/analytics-essentials",
-    "version": "0.0.4",
+    "version": "0.0.5-1",
     "keywords": [
         "Analytics",
         "Tag Manager",
@@ -8,9 +8,13 @@
     ],
     "description": "Configure and use Google Analytics and Google Tag Manager in your Next.js app.",
     "type": "module",
-    "types": "dist/main.d.ts",
+    "types": "dist/types/main.d.ts",
     "main": "dist/analytics-essentials.cjs",
     "module": "dist/analytics-essentials.js",
+    "files": [
+        "dist",
+        "doc"
+    ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/freshheads/analytics-essentials.git"
@@ -24,7 +28,8 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "lint": "eslint lib --ext ts,tsx --report-unused-disable-directives",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "prepublishOnly": "npm run build"
     },
     "devDependencies": {
         "@types/gtag.js": "^0.0.12",
@@ -48,5 +53,10 @@
     "peerDependencies": {
         "next": ">=13",
         "react": ">=18"
+    },
+    "peerDependenciesMeta": {
+        "next": {
+            "optional": true
+        }
     }
 }

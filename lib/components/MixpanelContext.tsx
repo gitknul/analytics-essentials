@@ -7,7 +7,7 @@ interface MixpanelContextProps<DTO> {
 
 interface MixpanelProviderProps<DTO> {
     children: React.ReactNode;
-    eventApiClient: (args: DTO) => Promise<void>;
+    eventApiClient: (args: DTO) => Promise<unknown>;
 }
 
 const MixpanelContext = createContext<MixpanelContextProps<DTO> | null>(null);
