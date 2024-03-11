@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { MixpanelEvent as DTO } from '../types';
+import { MixpanelEvent as DTO } from './types';
 import {
     extractUtmParams,
     isStandalonePWA,
