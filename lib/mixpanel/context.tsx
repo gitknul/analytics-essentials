@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext } from 'react';
 import { MixpanelEvent as DTO } from '../types';
 
@@ -27,7 +29,20 @@ export function MixpanelProvider({
     eventApiClient,
 }: MixpanelProviderProps<DTO>) {
     const trackEvent = (event: DTO) => {
-        eventApiClient(event);
+        // only send events on the client
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        eventApiClient({
+            ...event,
+            context: {
+                title: document.title,
+                href: window.location.href,
+                path: window.location.pathname,
+                ...event.context,
+            },
+        }).catch((e) => console.error(e));
     };
 
     return (
