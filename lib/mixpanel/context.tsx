@@ -1,7 +1,12 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { MixpanelEvent as DTO } from '../types';
+import {
+    extractUtmParams,
+    isStandalonePWA,
+    writeUtmParamsToSessionStorage,
+} from './utils.ts';
 
 interface MixpanelContextProps<DTO> {
     trackEvent: (event: DTO) => void;
@@ -34,16 +39,24 @@ export function MixpanelProvider({
             return;
         }
 
+        const utmParams = extractUtmParams();
+
         eventApiClient({
+            ...utmParams,
             ...event,
             context: {
                 title: document.title,
                 href: window.location.href,
                 path: window.location.pathname,
+                pwa: isStandalonePWA(),
                 ...event.context,
             },
         }).catch((e) => console.error(e));
     };
+
+    useEffect(() => {
+        writeUtmParamsToSessionStorage();
+    }, []);
 
     return (
         <MixpanelContext.Provider

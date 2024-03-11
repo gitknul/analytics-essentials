@@ -80,7 +80,7 @@ export type Event =
  * the other properties are suggestions for a "normal" event.
  * @example
  *  const event: MixpanelEvent = {
- *      name: 'Contact', // e.g. "Update profile", "Add to cart", "Purchase", "Page view"
+ *      event: 'Contact', // e.g. "Update profile", "Add to cart", "Purchase", "Page view"
  *      context: { // Give some context to the event. Where is it triggered and by who
  *          title: 'Product Page', // What page is the event triggered on
  *          path: '/product/123', // Make sure there aren't any personal info in the path
@@ -89,7 +89,12 @@ export type Event =
  *          audience: 'Freelancer', // Who is triggering this event e.g. a role or "new user"
  *          section: 'footer', // What section is the event triggered in
  *      },
- *      'product_id': '123', // Any other properties that you want to add to the event
+ *      utm_source: 'Facebook', // track the source where traffic is coming from, including a website or advertiser
+ *      utm_medium: 'advertising', // track the advertising medium, including email and banner ads
+ *      utm_campaign: 'Black friday', // track the campaign name associated with the traffic
+ *      utm_content: 'cta button', //track the specific link within in an ad that a user clicked
+ *      utm_term: 'tv sale', // track keywords associated with campaigns
+ *      product_id: '123', // Any other properties that you want to add to the event
  * }
  */
 export type MixpanelEvent = {
@@ -109,7 +114,14 @@ export type MixpanelEvent = {
         audience?: string;
         /** What section is the event triggered in e.g. footer or main menu */
         section?: string;
+        /** Is this event triggered in a standalone PWA? */
+        pwa?: boolean;
     };
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+    utm_term?: string;
     /** Any other properties that you want to add to the event */
     [key: string]: unknown;
 };
