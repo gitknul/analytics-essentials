@@ -39,7 +39,7 @@ export function MixpanelProvider({
             return;
         }
 
-        const utmParams = extractUtmParams();
+        const utmParams = extractUtmParams(window.location.search);
 
         eventApiClient({
             ...utmParams,
@@ -55,7 +55,7 @@ export function MixpanelProvider({
     };
 
     useEffect(() => {
-        writeUtmParamsToSessionStorage();
+        writeUtmParamsToSessionStorage(window.location.search);
     }, []);
 
     return (

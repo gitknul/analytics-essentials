@@ -3,8 +3,8 @@ export const isStandalonePWA = () =>
         ? window.matchMedia('(display-mode: standalone)').matches
         : false;
 
-export const extractUtmParams = () => {
-    const searchParams = new URLSearchParams(window.location.search);
+export const extractUtmParams = (paramsString: string) => {
+    const searchParams = new URLSearchParams(paramsString);
 
     return {
         utm_source:
@@ -30,8 +30,8 @@ export const extractUtmParams = () => {
     };
 };
 
-export const writeUtmParamsToSessionStorage = () => {
-    const searchParams = new URLSearchParams(window.location.search);
+export const writeUtmParamsToSessionStorage = (paramsString: string) => {
+    const searchParams = new URLSearchParams(paramsString);
 
     const utmSourceKeys = [
         'utm_source',
