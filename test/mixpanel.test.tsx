@@ -1,3 +1,4 @@
+// @ts-nocheck test file contains web api's that are not availalbe in node environment for typescript
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import {
     extractUtmParams,
@@ -5,15 +6,13 @@ import {
 } from '../lib/mixpanel/utils';
 import { MixpanelProvider, useMixpanelContext } from '../lib/mixpanel/context';
 import { fireEvent, render, renderHook } from '@testing-library/react';
-
-const urlContainingUTMParams = new URL(
-    'https://example.com?utm_source=source&utm_medium=medium&utm_campaign=campaign&utm_content=content&utm_term=term'
-);
-
-// @ts-expect-error web api types not available in test environment
-declare const sessionStorage: Storage;
+import React from 'react';
 
 describe('UTM tags', () => {
+    const urlContainingUTMParams = new URL(
+        'https://example.com?utm_source=source&utm_medium=medium&utm_campaign=campaign&utm_content=content&utm_term=term'
+    );
+
     test('extracting utm tags from url', () => {
         const result = extractUtmParams(urlContainingUTMParams.search);
 
@@ -41,34 +40,59 @@ describe('UTM tags', () => {
     });
 });
 
-function TrackEventTestingComponent() {
-    const { trackEvent } = useMixpanelContext();
-    return (
-        <button
-            onClick={() =>
-                trackEvent({
-                    name: 'test',
-                    context: { title: 'test' },
-                    data: { test: 'test' },
-                })
-            }
-        >
-            button
-        </button>
-    );
-}
-
 describe('MixpanelContext', () => {
-    test('provides expected context with trackEvent function', () => {
-        const wrapper = ({ children }) => (
-            <MixpanelProvider eventApiClient={(data) => Promise.resolve(data)}>
-                {children}
-            </MixpanelProvider>
-        );
+    const eventApiClient = vi.fn(() => Promise.resolve());
 
-        const { result } = renderHook(() => useMixpanelContext(), { wrapper });
+    const ContextWrapper = ({ children }: { children: React.ReactNode }) => (
+        <MixpanelProvider eventApiClient={eventApiClient}>
+            {children}
+        </MixpanelProvider>
+    );
+
+    function TrackEventTestingComponent() {
+        const { trackEvent } = useMixpanelContext();
+        return (
+            <button
+                onClick={() =>
+                    trackEvent({
+                        name: 'event name',
+                        context: { title: 'Page title' },
+                        data: { productId: '123' },
+                    })
+                }
+            >
+                button
+            </button>
+        );
+    }
+
+    test('provides expected context with trackEvent function', () => {
+        const { result } = renderHook(() => useMixpanelContext(), {
+            wrapper: ContextWrapper,
+        });
 
         expect(result.current).toHaveProperty('trackEvent');
         expect(typeof result.current.trackEvent).toBe('function');
+    });
+
+    test('trackEvent sends correct data to api client', () => {
+        const { getByText } = render(<TrackEventTestingComponent />, {
+            wrapper: ContextWrapper,
+        });
+
+        fireEvent.click(getByText('button'));
+
+        expect(eventApiClient).toHaveBeenCalledWith({
+            name: 'event name',
+            context: {
+                title: 'Page title',
+                href: window.location.href,
+                path: '/',
+                pwa: false,
+            },
+            data: {
+                productId: '123',
+            },
+        });
     });
 });

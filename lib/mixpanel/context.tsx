@@ -42,13 +42,13 @@ export function MixpanelProvider({
         const utmParams = extractUtmParams(window.location.search);
 
         eventApiClient({
-            ...utmParams,
             ...event,
             context: {
                 title: document.title,
                 href: window.location.href,
                 path: window.location.pathname,
                 pwa: isStandalonePWA(),
+                ...utmParams,
                 ...event.context,
             },
         }).catch((e) => console.error(e));
