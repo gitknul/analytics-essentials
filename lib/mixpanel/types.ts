@@ -7,7 +7,7 @@
  *      name: 'Contact', // e.g. "Update profile", "Add to cart", "Purchase", "Page view"
  *      context: { // Give some context to the event. Where is it triggered and by who
  *          title: 'Product Page', // What page is the event triggered on
- *          path: '/product/123', // Make sure there aren't any personal info in the path
+ *          pathname: '/product/123', // Make sure there aren't any personal info in the path
  *          href: 'https://www.example.com/product/123', // Make sure there aren't any personal info in the href
  *          route: '/product/:id',
  *          audience: 'Freelancer', // Who is triggering this event e.g. a role or "new user"
@@ -27,7 +27,7 @@ export type MixpanelEvent = {
     name: string;
     context?: {
         title?: string;
-        path?: string;
+        pathname?: string;
         href?: string;
         route?: string;
         audience?: string;
@@ -38,6 +38,7 @@ export type MixpanelEvent = {
         utm_campaign?: string;
         utm_content?: string;
         utm_term?: string;
+        [key: string]: unknown;
     };
     data?: {
         [key: string]: unknown;

@@ -1,23 +1,25 @@
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { MixpanelEvent as DTO } from './types';
+import { MixpanelEvent } from './types';
 import {
     extractUtmParams,
     isStandalonePWA,
     writeUtmParamsToSessionStorage,
 } from './utils.ts';
 
-interface MixpanelContextProps<DTO> {
+interface MixpanelContextProps<DTO extends MixpanelEvent> {
     trackEvent: (event: DTO) => void;
 }
 
-interface MixpanelProviderProps<DTO> {
+interface MixpanelProviderProps<DTO extends MixpanelEvent> {
     children: React.ReactNode;
     eventApiClient: (args: DTO) => Promise<unknown>;
+    defaultEventContext?: DTO['context'];
 }
 
-const MixpanelContext = createContext<MixpanelContextProps<DTO> | null>(null);
+const MixpanelContext =
+    createContext<MixpanelContextProps<MixpanelEvent> | null>(null);
 
 export function useMixpanelContext() {
     const context = useContext(MixpanelContext);
@@ -32,8 +34,9 @@ export function useMixpanelContext() {
 export function MixpanelProvider({
     children,
     eventApiClient,
-}: MixpanelProviderProps<DTO>) {
-    const trackEvent = (event: DTO) => {
+    defaultEventContext,
+}: MixpanelProviderProps<MixpanelEvent>) {
+    const trackEvent = (event: MixpanelEvent) => {
         // only send events on the client
         if (typeof window === 'undefined') {
             return;
@@ -46,8 +49,9 @@ export function MixpanelProvider({
             context: {
                 title: document.title,
                 href: window.location.href,
-                path: window.location.pathname,
+                pathname: window.location.pathname,
                 pwa: isStandalonePWA(),
+                ...defaultEventContext,
                 ...utmParams,
                 ...event.context,
             },
