@@ -11,7 +11,7 @@ import {
     renderHook,
     RenderOptions,
 } from '@testing-library/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MixpanelEvent } from '../lib/mixpanel';
 
 describe('UTM tags', () => {
@@ -93,6 +93,22 @@ describe('MixpanelContext', () => {
         );
     }
 
+    function TrackPageView() {
+        const { trackPageView } = useMixpanelContext();
+
+        useEffect(() => {
+            trackPageView({
+                data: {
+                    title: 'Example',
+                    pathname: '/product/1',
+                    route: '/product/:id',
+                },
+            });
+        }, []);
+
+        return null;
+    }
+
     test('provides expected context with trackEvent function', () => {
         const { result } = renderHook(() => useMixpanelContext(), {
             wrapper: ContextWrapper,
@@ -152,6 +168,22 @@ describe('MixpanelContext', () => {
             },
             data: {
                 productId: '123',
+            },
+        });
+    });
+
+    test('trackPageView sends correct data to api client', () => {
+        renderWithMixpanelProvider(<TrackPageView />);
+
+        expect(eventApiClient).toHaveBeenCalledWith({
+            name: 'Page view',
+            context: {
+                pwa: false,
+            },
+            data: {
+                title: 'Example',
+                pathname: '/product/1',
+                route: '/product/:id',
             },
         });
     });
