@@ -96,7 +96,44 @@ const App = () => {
 
 ### Page view events
 
-TODO
+For page view events, you can use the `trackPageView` function.
+First create a component that will be used to track page views.
+The reason we don't make this part of the essential package is because we don't want to make any assumptions about the router you are using.
+Or you might want to send additional data with the page view event.
+
+```tsx
+export default function TrackPageView() {
+    const { trackPageView } = useMixpanelContext();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        trackPageView({
+            data: {
+                title: document.title,
+                pathname: pathname,
+                route: router.route,
+            },
+        });
+    }, [pathname]);
+
+    return null;
+}
+```
+
+Then add this component to your app:
+
+```tsx
+
+const App = () => {
+    return (
+        <MixpanelProvider eventApiClient={sendTrackEvent} defaultEventContext={defaultMixpanelEventContext}>
+            <TrackPageView />
+            {children}
+        </MixpanelProvider>
+    );
+};
+```
 
 ### UTM tracking
 
@@ -104,6 +141,12 @@ UTM tags are automatically added to the context of the event if they are present
 They will be remembered for the duration of the session. Even if the user navigates to a different page, the UTM tags will be added to new events.
 
 ## Mixpanel users
+
+TODO how to handle reset mixpanel user
+
+## Event naming conventions
+
+TODO - how to name events
 
 ## Event types
 

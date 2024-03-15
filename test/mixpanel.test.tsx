@@ -100,6 +100,9 @@ describe('MixpanelContext', () => {
 
         expect(result.current).toHaveProperty('trackEvent');
         expect(typeof result.current.trackEvent).toBe('function');
+
+        expect(result.current).toHaveProperty('trackPageView');
+        expect(typeof result.current.trackPageView).toBe('function');
     });
 
     test('trackEvent sends correct data to api client', () => {
@@ -113,7 +116,6 @@ describe('MixpanelContext', () => {
             name: 'event name',
             context: {
                 title: 'Page title',
-                href: window.location.href,
                 pathname: '/',
                 pwa: false,
             },

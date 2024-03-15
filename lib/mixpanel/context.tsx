@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { MixpanelEvent } from './types';
+import { MixpanelEvent, MixpanelPageViewEvent } from './types';
 import {
     extractUtmParams,
     isStandalonePWA,
@@ -10,6 +10,7 @@ import {
 
 interface MixpanelContextProps<DTO extends MixpanelEvent> {
     trackEvent: (event: DTO) => void;
+    trackPageView: (event: MixpanelPageViewEvent) => void;
 }
 
 interface MixpanelProviderProps<DTO extends MixpanelEvent> {
@@ -48,10 +49,28 @@ export function MixpanelProvider({
             ...event,
             context: {
                 title: document.title,
-                href: window.location.href,
                 pathname: window.location.pathname,
                 pwa: isStandalonePWA(),
                 ...defaultEventContext,
+                ...utmParams,
+                ...event.context,
+            },
+        }).catch((e) => console.error(e));
+    };
+
+    const trackPageView = (event: MixpanelPageViewEvent) => {
+        // only send events on the client
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        const utmParams = extractUtmParams(window.location.search);
+
+        eventApiClient({
+            ...event,
+            name: 'Page view',
+            context: {
+                pwa: isStandalonePWA(),
                 ...utmParams,
                 ...event.context,
             },
@@ -66,6 +85,7 @@ export function MixpanelProvider({
         <MixpanelContext.Provider
             value={{
                 trackEvent,
+                trackPageView,
             }}
         >
             {children}
