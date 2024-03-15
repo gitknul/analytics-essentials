@@ -4,10 +4,6 @@
 This implementation of mixpanel relies on a backend service to send the data to mixpanel. The goal of the frontend lib is to provide a typechecked event to help developers push events the same way.
 For the backend Freshheads created a php bundle, [FHMixpanelBundle](https://github.com/freshheads/FHMixpanelBundle) and a node library will also be created in the future.
 
-## Installation
-
-`npm install @freshheads/analytics-essentials`
-
 ## Usage
 
 Add the MixpanelProvider to your app:
