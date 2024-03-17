@@ -17,3 +17,31 @@ const App = () => {
   );
 };
 ```
+
+## Usage
+
+```js
+import {
+    EventTypes,
+    pushDataLayerEvent,
+} from '@freshheads/analytics-essentials';
+
+pushDataLayerEvent({
+    type: EventTypes.CLICK,
+    name: 'hero_button_click',
+});
+```
+
+## Optional params
+
+```js
+pushDataLayerEvent({
+    type: EventTypes.CLICK,
+    name: 'hero_button_click',
+    context: {
+      // context is typed based on type
+      // you can always extend context with your custom properties
+    }
+}),
+
+```

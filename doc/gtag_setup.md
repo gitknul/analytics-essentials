@@ -22,3 +22,18 @@ const App = () => {
   );
 };
 ```
+
+
+## Usage
+
+```js
+import {
+  EventTypes,
+  pushGaEvent,
+} from '@freshheads/analytics-essentials';
+
+pushGaEvent({ 
+    type: EventTypes.CLICK,
+    name: 'hero_button_click' 
+});
+```

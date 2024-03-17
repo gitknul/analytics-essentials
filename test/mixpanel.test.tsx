@@ -5,8 +5,14 @@ import {
     writeUtmParamsToSessionStorage,
 } from '../lib/mixpanel/utils';
 import { MixpanelProvider, useMixpanelContext } from '../lib/mixpanel/context';
-import { fireEvent, render, renderHook } from '@testing-library/react';
-import React from 'react';
+import {
+    fireEvent,
+    render,
+    renderHook,
+    RenderOptions,
+} from '@testing-library/react';
+import React, { useEffect } from 'react';
+import { MixpanelEvent } from '../lib/mixpanel';
 
 describe('UTM tags', () => {
     const urlContainingUTMParams = new URL(
@@ -43,11 +49,32 @@ describe('UTM tags', () => {
 describe('MixpanelContext', () => {
     const eventApiClient = vi.fn(() => Promise.resolve());
 
-    const ContextWrapper = ({ children }: { children: React.ReactNode }) => (
-        <MixpanelProvider eventApiClient={eventApiClient}>
+    const ContextWrapper = ({
+        children,
+        defaultEventContext,
+    }: {
+        children: React.ReactNode;
+        defaultEventContext: MixpanelEvent;
+    }) => (
+        <MixpanelProvider
+            eventApiClient={eventApiClient}
+            defaultEventContext={defaultEventContext}
+        >
             {children}
         </MixpanelProvider>
     );
+
+    const renderWithMixpanelProvider = (
+        ui: React.ReactElement,
+        options?: Omit<RenderOptions, 'wrapper'>
+    ) => {
+        return render(ui, {
+            wrapper: (props: any) => (
+                <ContextWrapper {...props} {...options?.contextWrapperProps} />
+            ),
+            ...options?.testingLibraryOptions,
+        });
+    };
 
     function TrackEventTestingComponent() {
         const { trackEvent } = useMixpanelContext();
@@ -66,6 +93,22 @@ describe('MixpanelContext', () => {
         );
     }
 
+    function TrackPageView() {
+        const { trackPageView } = useMixpanelContext();
+
+        useEffect(() => {
+            trackPageView({
+                data: {
+                    title: 'Example',
+                    pathname: '/product/1',
+                    route: '/product/:id',
+                },
+            });
+        }, []);
+
+        return null;
+    }
+
     test('provides expected context with trackEvent function', () => {
         const { result } = renderHook(() => useMixpanelContext(), {
             wrapper: ContextWrapper,
@@ -73,12 +116,15 @@ describe('MixpanelContext', () => {
 
         expect(result.current).toHaveProperty('trackEvent');
         expect(typeof result.current.trackEvent).toBe('function');
+
+        expect(result.current).toHaveProperty('trackPageView');
+        expect(typeof result.current.trackPageView).toBe('function');
     });
 
     test('trackEvent sends correct data to api client', () => {
-        const { getByText } = render(<TrackEventTestingComponent />, {
-            wrapper: ContextWrapper,
-        });
+        const { getByText } = renderWithMixpanelProvider(
+            <TrackEventTestingComponent />
+        );
 
         fireEvent.click(getByText('button'));
 
@@ -86,12 +132,58 @@ describe('MixpanelContext', () => {
             name: 'event name',
             context: {
                 title: 'Page title',
-                href: window.location.href,
-                path: '/',
+                pathname: '/',
                 pwa: false,
             },
             data: {
                 productId: '123',
+            },
+        });
+    });
+
+    test('provider can extend the default context for event tracking', () => {
+        const defaultEventContext = {
+            href: 'https://example.com',
+            pathname: '/example',
+            audience: 'Consumer',
+        };
+
+        const { getByText } = renderWithMixpanelProvider(
+            <TrackEventTestingComponent />,
+            {
+                contextWrapperProps: { defaultEventContext },
+            }
+        );
+
+        fireEvent.click(getByText('button'));
+
+        expect(eventApiClient).toHaveBeenCalledWith({
+            name: 'event name',
+            context: {
+                title: 'Page title',
+                href: 'https://example.com',
+                pathname: '/example',
+                pwa: false,
+                audience: 'Consumer',
+            },
+            data: {
+                productId: '123',
+            },
+        });
+    });
+
+    test('trackPageView sends correct data to api client', () => {
+        renderWithMixpanelProvider(<TrackPageView />);
+
+        expect(eventApiClient).toHaveBeenCalledWith({
+            name: 'Page view',
+            context: {
+                pwa: false,
+            },
+            data: {
+                title: 'Example',
+                pathname: '/product/1',
+                route: '/product/:id',
             },
         });
     });
