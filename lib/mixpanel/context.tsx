@@ -8,19 +8,20 @@ import {
     writeUtmParamsToSessionStorage,
 } from './utils.ts';
 
-interface MixpanelContextProps<DTO extends MixpanelEvent> {
-    trackEvent: (event: DTO) => void;
+interface MixpanelContextProps {
+    trackEvent: (event: MixpanelEvent) => void;
     trackPageView: (event: MixpanelPageViewEvent) => void;
 }
 
-interface MixpanelProviderProps<DTO extends MixpanelEvent> {
+interface MixpanelProviderProps {
     children: React.ReactNode;
-    eventApiClient: (args: DTO) => Promise<unknown>;
-    defaultEventContext?: DTO['context'];
+    eventApiClient: (
+        args: MixpanelEvent | MixpanelPageViewEvent
+    ) => Promise<unknown>;
+    defaultEventContext?: MixpanelEvent['context'];
 }
 
-const MixpanelContext =
-    createContext<MixpanelContextProps<MixpanelEvent> | null>(null);
+const MixpanelContext = createContext<MixpanelContextProps | null>(null);
 
 export function useMixpanelContext() {
     const context = useContext(MixpanelContext);
@@ -36,7 +37,7 @@ export function MixpanelProvider({
     children,
     eventApiClient,
     defaultEventContext,
-}: MixpanelProviderProps<MixpanelEvent>) {
+}: MixpanelProviderProps) {
     const trackEvent = (event: MixpanelEvent) => {
         // only send events on the client
         if (typeof window === 'undefined') {
