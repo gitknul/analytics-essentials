@@ -166,4 +166,16 @@ function resetMixpanelUser() {
 
 ## Event naming conventions
 
-TODO - how to name events
+Our advice is to use the following naming conventions for events:
+
+1. Using present tense for events that are triggered by the user, and past tense for events that are triggered by the backend.
+> e.g. 'Add to cart' instead of 'Added to cart'
+
+2. Not using snake_case but use normal spaces for event names so it's easier to read in the mixpanel dashboard.
+> e.g. 'Add to cart' instead of 'add_to_cart'
+
+3. Grouping events by using context properties instead of adding them to the event name.
+> e.g. 'Click button' with context { section: 'hero' } instead of 'Click hero button'
+
+4. Using short and descriptive names.
+
