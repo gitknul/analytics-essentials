@@ -151,12 +151,18 @@ They will be remembered for the duration of the session. Even if the user naviga
 
 ## Mixpanel users
 
-TODO how to handle reset mixpanel user
+Mixpanel events can be attached to a user. This is done in the backend on user login, see [FHMixpanelBundle](https://github.com/freshheads/FHMixpanelBundle) for more information.
+When using JWT tokens for authentication the token can become invalid at any time. This means that the user can become anonymous at any time.
+When the user becomes anonymous, the frontend should also reset the user in mixpanel.
+
+FHMixpanelBundle has an endpoint to do this reset user action. This library doesn't provide an implementation for it but could look like this:
+
+```tsx
+function resetMixpanelUser() {
+    executeDeleteRequest('_mixpanel/transaction');
+}
+```
 
 ## Event naming conventions
 
 TODO - how to name events
-
-## Event types
-
-TODO - how to override the event types
