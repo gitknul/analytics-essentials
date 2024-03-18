@@ -27,7 +27,7 @@ const App = () => {
 import { MixpanelEvent } from '@freshheads/analytics-essentials';
 import { executePostRequest } from '@/api/client';
 
-export const sendTrackEvent = async (data: MixpanelEvent) => {
+export const sendTrackEvent = async (data: MixpanelEvent | MixpanelPageViewEvent) => {
     return executePostRequest('_mixpanel/track', data);
 };
 ```
@@ -90,6 +90,19 @@ const App = () => {
 };
 ```
 
+Or by using setEventContext which is exposed by the useMixpanelContext hook. This would make sense if some data is not available in your root component.
+
+```tsx
+const { setEventContext } = useMixpanelContext();
+
+useEffect(() => {
+    setEventContext({
+        audience: 'Consumer',
+    });
+}, []);
+```
+
+
 ### Page view events
 
 For page view events, you can use the `trackPageView` function.
@@ -123,7 +136,7 @@ Then add this component to your app:
 
 const App = () => {
     return (
-        <MixpanelProvider eventApiClient={sendTrackEvent} defaultEventContext={defaultMixpanelEventContext}>
+        <MixpanelProvider eventApiClient={sendTrackEvent}>
             <TrackPageView />
             {children}
         </MixpanelProvider>
