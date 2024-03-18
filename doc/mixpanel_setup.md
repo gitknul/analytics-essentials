@@ -129,6 +129,7 @@ export default function TrackPageView() {
     return null;
 }
 ```
+> Tip: use pathname as a dependency for the useEffect hook. This way it will not trigger on query param changes. If you want to track query changes, you could use location.href as a dependency.
 
 Then add this component to your app:
 
