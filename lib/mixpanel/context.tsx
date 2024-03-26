@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { MixpanelEvent, MixpanelPageViewEvent } from './types';
 import {
     extractUtmParams,
@@ -11,6 +11,7 @@ import {
 interface MixpanelContextProps {
     trackEvent: (event: MixpanelEvent) => void;
     trackPageView: (event: MixpanelPageViewEvent) => void;
+    setEventContext: (context: MixpanelEvent['context']) => void;
 }
 
 interface MixpanelProviderProps {
@@ -38,6 +39,10 @@ export function MixpanelProvider({
     eventApiClient,
     defaultEventContext,
 }: MixpanelProviderProps) {
+    const [eventContext, setEventContext] = useState<MixpanelEvent['context']>(
+        defaultEventContext || {}
+    );
+
     const trackEvent = (event: MixpanelEvent) => {
         // only send events on the client
         if (typeof window === 'undefined') {
@@ -52,7 +57,7 @@ export function MixpanelProvider({
                 title: document.title,
                 pathname: window.location.pathname,
                 pwa: isStandalonePWA(),
-                ...defaultEventContext,
+                ...eventContext,
                 ...utmParams,
                 ...event.context,
             },
@@ -87,6 +92,7 @@ export function MixpanelProvider({
             value={{
                 trackEvent,
                 trackPageView,
+                setEventContext,
             }}
         >
             {children}

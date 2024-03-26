@@ -76,8 +76,19 @@ describe('MixpanelContext', () => {
         });
     };
 
-    function TrackEventTestingComponent() {
-        const { trackEvent } = useMixpanelContext();
+    function TrackEventTestingComponent({
+        defaultEventContext,
+    }: {
+        defaultEventContext?: MixpanelEvent['context'];
+    }) {
+        const { trackEvent, setEventContext } = useMixpanelContext();
+
+        useEffect(() => {
+            if (defaultEventContext) {
+                setEventContext(defaultEventContext);
+            }
+        }, [defaultEventContext]);
+
         return (
             <button
                 onClick={() =>
@@ -141,7 +152,7 @@ describe('MixpanelContext', () => {
         });
     });
 
-    test('provider can extend the default context for event tracking', () => {
+    test('provider can extend the default context for event tracking with provider prop', () => {
         const defaultEventContext = {
             href: 'https://example.com',
             pathname: '/example',
@@ -153,6 +164,36 @@ describe('MixpanelContext', () => {
             {
                 contextWrapperProps: { defaultEventContext },
             }
+        );
+
+        fireEvent.click(getByText('button'));
+
+        expect(eventApiClient).toHaveBeenCalledWith({
+            name: 'event name',
+            context: {
+                title: 'Page title',
+                href: 'https://example.com',
+                pathname: '/example',
+                pwa: false,
+                audience: 'Consumer',
+            },
+            data: {
+                productId: '123',
+            },
+        });
+    });
+
+    test('Default event context can be extended from a child component', () => {
+        const defaultEventContext = {
+            href: 'https://example.com',
+            pathname: '/example',
+            audience: 'Consumer',
+        };
+
+        const { getByText } = renderWithMixpanelProvider(
+            <TrackEventTestingComponent
+                defaultEventContext={defaultEventContext}
+            />
         );
 
         fireEvent.click(getByText('button'));

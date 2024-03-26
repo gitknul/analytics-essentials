@@ -27,7 +27,7 @@ const App = () => {
 import { MixpanelEvent } from '@freshheads/analytics-essentials';
 import { executePostRequest } from '@/api/client';
 
-export const sendTrackEvent = async (data: MixpanelEvent) => {
+export const sendTrackEvent = async (data: MixpanelEvent | MixpanelPageViewEvent) => {
     return executePostRequest('_mixpanel/track', data);
 };
 ```
@@ -90,6 +90,19 @@ const App = () => {
 };
 ```
 
+Or by using setEventContext which is exposed by the useMixpanelContext hook. This would make sense if some data is not available in your root component.
+
+```tsx
+const { setEventContext } = useMixpanelContext();
+
+useEffect(() => {
+    setEventContext({
+        audience: 'Consumer',
+    });
+}, []);
+```
+
+
 ### Page view events
 
 For page view events, you can use the `trackPageView` function.
@@ -116,6 +129,7 @@ export default function TrackPageView() {
     return null;
 }
 ```
+> Tip: use pathname as a dependency for the useEffect hook. This way it will not trigger on query param changes. If you want to track query changes, you could use location.href as a dependency.
 
 Then add this component to your app:
 
@@ -123,7 +137,7 @@ Then add this component to your app:
 
 const App = () => {
     return (
-        <MixpanelProvider eventApiClient={sendTrackEvent} defaultEventContext={defaultMixpanelEventContext}>
+        <MixpanelProvider eventApiClient={sendTrackEvent}>
             <TrackPageView />
             {children}
         </MixpanelProvider>
@@ -138,12 +152,30 @@ They will be remembered for the duration of the session. Even if the user naviga
 
 ## Mixpanel users
 
-TODO how to handle reset mixpanel user
+Mixpanel events can be attached to a user. This is done in the backend on user login, see [FHMixpanelBundle](https://github.com/freshheads/FHMixpanelBundle) for more information.
+When using JWT tokens for authentication the token can become invalid at any time. This means that the user can become anonymous at any time.
+When the user becomes anonymous, the frontend should also reset the user in mixpanel.
+
+FHMixpanelBundle has an endpoint to do this reset user action. This library doesn't provide an implementation for it but could look like this:
+
+```tsx
+function resetMixpanelUser() {
+    executeDeleteRequest('_mixpanel/transaction');
+}
+```
 
 ## Event naming conventions
 
-TODO - how to name events
+Our advice is to use the following naming conventions for events:
 
-## Event types
+1. Using present tense for events that are triggered by the user, and past tense for events that are triggered by the backend.
+> e.g. 'Add to cart' instead of 'Added to cart'
 
-TODO - how to override the event types
+2. Not using snake_case but use normal spaces for event names so it's easier to read in the mixpanel dashboard.
+> e.g. 'Add to cart' instead of 'add_to_cart'
+
+3. Grouping events by using context properties instead of adding them to the event name.
+> e.g. 'Click button' with context { section: 'hero' } instead of 'Click hero button'
+
+4. Using short and descriptive names.
+
