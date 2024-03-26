@@ -3,9 +3,9 @@ import { isGtagAvailable } from './isGtagAvailable';
 
 /**
  * @example
- * pushGaEvent({ type: EventTypes.CLICK, name: 'hero_button'})
+ * pushGaEvent({ type: EventType.CLICK, name: 'hero_button'})
  * pushGaEvent({
- *      type: EventTypes.GENERIC,
+ *      type: EventType.GENERIC,
  *      context: {
  *          label: 'share_event',
  *          category: 'Job detail page',

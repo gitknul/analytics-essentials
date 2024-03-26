@@ -4,7 +4,7 @@ import { isDataLayerAvailable } from './isDataLayerAvailable';
 /**
  * @example
  * pushDataLayerEvent({
- *    type: EventTypes.GENERIC,
+ *    type: EventType.GENERIC,
  *    context: {
  *      label: 'scroll_event', // event name in google analytics
  *      category: 'blog page',
@@ -13,7 +13,7 @@ import { isDataLayerAvailable } from './isDataLayerAvailable';
  * });
  *
  * pushDataLayerEvent({
- *    type: EventTypes.ClICK,
+ *    type: EventType.ClICK,
  *    name: 'hero_banner_button_click',
  * });
  */

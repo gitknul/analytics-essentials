@@ -28,12 +28,12 @@ const App = () => {
 
 ```js
 import {
-  EventTypes,
+  EventType,
   pushGaEvent,
 } from '@freshheads/analytics-essentials';
 
 pushGaEvent({ 
-    type: EventTypes.CLICK,
+    type: EventType.CLICK,
     name: 'hero_button_click' 
 });
 ```

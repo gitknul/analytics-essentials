@@ -22,12 +22,12 @@ const App = () => {
 
 ```js
 import {
-    EventTypes,
+    EventType,
     pushDataLayerEvent,
 } from '@freshheads/analytics-essentials';
 
 pushDataLayerEvent({
-    type: EventTypes.CLICK,
+    type: EventType.CLICK,
     name: 'hero_button_click',
 });
 ```
@@ -36,7 +36,7 @@ pushDataLayerEvent({
 
 ```js
 pushDataLayerEvent({
-    type: EventTypes.CLICK,
+    type: EventType.CLICK,
     name: 'hero_button_click',
     context: {
       // context is typed based on type
