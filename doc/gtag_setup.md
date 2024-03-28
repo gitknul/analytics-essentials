@@ -5,6 +5,8 @@
 #### **`app.tsx`**
 
 ```jsx
+import { LoadGA4 } from '@freshheads/analytics-essentials/google';
+
 const App = () => {
   return (
     <>
@@ -23,14 +25,13 @@ const App = () => {
 };
 ```
 
-
 ## Usage
 
 ```js
 import {
   EventType,
   pushGaEvent,
-} from '@freshheads/analytics-essentials';
+} from '@freshheads/analytics-essentials/google';
 
 pushGaEvent({ 
     type: EventType.CLICK,
