@@ -1,16 +1,33 @@
 {
     "name": "@freshheads/analytics-essentials",
-    "version": "0.0.5-3",
+    "version": "0.0.5-4",
     "keywords": [
         "Analytics",
         "Tag Manager",
         "Freshheads"
     ],
-    "description": "Configure and use Google Analytics and Google Tag Manager in your Next.js app.",
+    "description": "Essentials for setting up analytics with Mixpanel, Google Analytics and Google Tag Manager",
     "type": "module",
-    "types": "dist/types/main.d.ts",
-    "main": "dist/analytics-essentials.cjs",
-    "module": "dist/analytics-essentials.js",
+    "main": "dist/mixpanel.cjs",
+    "module": "dist/mixpanel.js",
+    "types": "dist/types/mixpanel/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/types/mixpanel/index.d.ts",
+            "import": "./dist/mixpanel.js",
+            "require": "./dist/mixpanel.cjs"
+        },
+        "./mixpanel": {
+            "types": "./dist/types/mixpanel/index.d.ts",
+            "import": "./dist/mixpanel.js",
+            "require": "./dist/mixpanel.cjs"
+        },
+        "./google": {
+            "types": "./dist/types/google/index.d.ts",
+            "import": "./dist/google.js",
+            "require": "./dist/google.cjs"
+        }
+    },
     "files": [
         "dist",
         "doc"

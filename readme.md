@@ -10,6 +10,6 @@ npm i @freshheads/analytics-essentials
 
 ### Usage by analytics provider
 
-- [Mixpanel Setup](doc/mixpanel_setup.md)
-- [Gtag Setup](doc/gtag_setup.md)
-- [Tagmanager Setup](doc/tagmanager_setup.md)
+- [Mixpanel](doc/mixpanel_setup.md)
+- [Gtag](doc/gtag_setup.md)
+- [Tagmanager](doc/tagmanager_setup.md)

@@ -8,8 +8,10 @@ export default defineConfig({
     build: {
         outDir: 'dist',
         lib: {
-            entry: resolve(__dirname, 'lib/main.ts'),
-            name: 'main',
+            entry: {
+                google: resolve(__dirname, 'lib/google/index.ts'),
+                mixpanel: resolve(__dirname, 'lib/mixpanel/index.ts'),
+            },
             formats: ['es', 'cjs'],
         },
         rollupOptions: {
