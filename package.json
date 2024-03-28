@@ -79,8 +79,5 @@
         "next": {
             "optional": true
         }
-    },
-    "dependencies": {
-        "@freshheads/analytics-essentials": "^0.0.4"
     }
 }
