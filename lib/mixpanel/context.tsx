@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from 'react';
 import { MixpanelEvent, MixpanelPageViewEvent } from './types';
 import {
     extractUtmParams,
@@ -43,45 +49,51 @@ export function MixpanelProvider({
         defaultEventContext || {}
     );
 
-    const trackEvent = (event: MixpanelEvent) => {
-        // only send events on the client
-        if (typeof window === 'undefined') {
-            return;
-        }
+    const trackEvent = useCallback(
+        (event: MixpanelEvent) => {
+            // only send events on the client
+            if (typeof window === 'undefined') {
+                return;
+            }
 
-        const utmParams = extractUtmParams(window.location.search);
+            const utmParams = extractUtmParams(window.location.search);
 
-        eventApiClient({
-            ...event,
-            context: {
-                title: document.title,
-                pathname: window.location.pathname,
-                pwa: isStandalonePWA(),
-                ...eventContext,
-                ...utmParams,
-                ...event.context,
-            },
-        }).catch((e) => console.error(e));
-    };
+            eventApiClient({
+                ...event,
+                context: {
+                    title: document.title,
+                    pathname: window.location.pathname,
+                    pwa: isStandalonePWA(),
+                    ...eventContext,
+                    ...utmParams,
+                    ...event.context,
+                },
+            }).catch((e) => console.error(e));
+        },
+        [eventApiClient, eventContext]
+    );
 
-    const trackPageView = (event: MixpanelPageViewEvent) => {
-        // only send events on the client
-        if (typeof window === 'undefined') {
-            return;
-        }
+    const trackPageView = useCallback(
+        (event: MixpanelPageViewEvent) => {
+            // only send events on the client
+            if (typeof window === 'undefined') {
+                return;
+            }
 
-        const utmParams = extractUtmParams(window.location.search);
+            const utmParams = extractUtmParams(window.location.search);
 
-        eventApiClient({
-            ...event,
-            name: 'Page view',
-            context: {
-                pwa: isStandalonePWA(),
-                ...utmParams,
-                ...event.context,
-            },
-        }).catch((e) => console.error(e));
-    };
+            eventApiClient({
+                ...event,
+                name: 'Page view',
+                context: {
+                    pwa: isStandalonePWA(),
+                    ...utmParams,
+                    ...event.context,
+                },
+            }).catch((e) => console.error(e));
+        },
+        [eventApiClient]
+    );
 
     useEffect(() => {
         writeUtmParamsToSessionStorage(window.location.search);

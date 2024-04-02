@@ -153,6 +153,11 @@ They will be remembered for the duration of the session. Even if the user naviga
 ## Mixpanel users
 
 Mixpanel events can be attached to a user. This is done in the backend on user login, see [FHMixpanelBundle](https://github.com/freshheads/FHMixpanelBundle) for more information.
+
+### Reset user
+The device_id is stored in a cookie, so when the user logs out, the cookie should be reset. 
+Otherwise, when another user logs in on the same device, the device_id is linked to two users which is not allowed.
+
 When using JWT tokens for authentication the token can become invalid at any time. This means that the user can become anonymous at any time.
 When the user becomes anonymous, the frontend should also reset the user in mixpanel.
 
@@ -170,6 +175,8 @@ Our advice is to use the following naming conventions for events:
 
 1. Using present tense for events that are triggered by the user, and past tense for events that are triggered by the backend.
 > e.g. 'Add to cart' instead of 'Added to cart'
+
+> e.g. Action + what
 
 2. Not using snake_case but use normal spaces for event names so it's easier to read in the mixpanel dashboard.
 > e.g. 'Add to cart' instead of 'add_to_cart'
