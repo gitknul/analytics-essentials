@@ -1,6 +1,8 @@
 import { Event } from '../types';
 import { isDataLayerAvailable } from './isDataLayerAvailable';
 
+declare const window: Window & { dataLayer: Record<string, unknown>[] };
+
 /**
  * @example
  * pushDataLayerEvent({
@@ -20,7 +22,7 @@ import { isDataLayerAvailable } from './isDataLayerAvailable';
 
 export function pushDataLayerEvent(props: Event, clear = true): void {
     if (!isDataLayerAvailable()) return;
-    const dataLayer = (window as any).dataLayer;
+    const dataLayer = window.dataLayer;
 
     let name: string = props.type;
 

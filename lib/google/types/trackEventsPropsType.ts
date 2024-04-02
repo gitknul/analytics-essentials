@@ -27,7 +27,7 @@ interface PurchaseEvent {
                 affiliation?: string;
                 price?: number;
                 quantity?: number;
-            }[]
+            }[],
         ];
     } & ContextType;
 }
