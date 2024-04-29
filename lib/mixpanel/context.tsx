@@ -1,113 +1,107 @@
 'use client';
 
-import React, {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
-} from 'react';
-import { MixpanelEvent, MixpanelPageViewEvent } from './types';
-import {
-    extractUtmParams,
-    isStandalonePWA,
-    writeUtmParamsToSessionStorage,
-} from './utils.ts';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { writeUtmParamsToSessionStorage } from './web/utils.ts';
+import { TrackingService } from './tracking/TrackingService.ts';
+import { WebMixpanelEvent, WebMixpanelPageViewEvent } from './types/webTypes.ts';
+import { MobileMixpanelEvent, MobileMixpanelPageViewEvent } from './types/mobileTypes.ts';
 
 interface MixpanelContextProps {
-    trackEvent: (event: MixpanelEvent) => void;
-    trackPageView: (event: MixpanelPageViewEvent) => void;
-    setEventContext: (context: MixpanelEvent['context']) => void;
+  trackEvent: (event: WebMixpanelEvent | MobileMixpanelEvent) => void;
+  trackPageView: (event: WebMixpanelPageViewEvent | MobileMixpanelPageViewEvent) => void;
+  setEventContext: (context: WebMixpanelEvent['context'] | MobileMixpanelEvent['context']) => void;
 }
 
 interface MixpanelProviderProps {
-    children: React.ReactNode;
-    eventApiClient: (
-        args: MixpanelEvent | MixpanelPageViewEvent
-    ) => Promise<unknown>;
-    defaultEventContext?: MixpanelEvent['context'];
+  /**
+   * Children to render
+   */
+  children: React.ReactNode;
+  /**
+   * Tracking service to use included in this package are `WebTrackingService` and `MobileTrackingService`
+   * @see WebTrackingService use for web applications
+   * @see MobileTrackingService use for mobile applications, NOTE: set disableSessionStorage to true to disable session storage because it is not available in mobile
+   *
+   * if you want to use your own tracking service you can implement the `TrackingService` interface
+   * @see TrackingService
+   *
+   */
+  trackingService: TrackingService;
+  /**
+   * Default event context to use for all events
+   * @see WebMixpanelEvent for web events
+   * @see MobileMixpanelEvent for mobile events
+   */
+  defaultEventContext?: WebMixpanelEvent['context'] | MobileMixpanelEvent['context'];
+  /**
+   * Disables session storage for storing utm params
+   */
+  disableSessionStorage?: boolean;
 }
 
 const MixpanelContext = createContext<MixpanelContextProps | null>(null);
 
 export function useMixpanelContext() {
-    const context = useContext(MixpanelContext);
+  const context = useContext(MixpanelContext);
 
-    if (!context) {
-        throw new Error('<MixpanelProvider /> not found');
-    }
+  if (!context) {
+    throw new Error('<MixpanelProvider /> not found');
+  }
 
-    return context;
+  return context;
 }
 
 export function MixpanelProvider({
-    children,
-    eventApiClient,
-    defaultEventContext,
+  children,
+  trackingService,
+  defaultEventContext,
+  disableSessionStorage = false,
 }: MixpanelProviderProps) {
-    const [eventContext, setEventContext] = useState<MixpanelEvent['context']>(
-        defaultEventContext || {}
-    );
+  const [eventContext, setEventContext] = useState<WebMixpanelEvent['context'] | MobileMixpanelEvent['context']>(
+    defaultEventContext || {}
+  );
 
-    const trackEvent = useCallback(
-        (event: MixpanelEvent) => {
-            // only send events on the client
-            if (typeof window === 'undefined') {
-                return;
-            }
-
-            const utmParams = extractUtmParams(window.location.search);
-
-            eventApiClient({
-                ...event,
-                context: {
-                    title: document.title,
-                    pathname: window.location.pathname,
-                    pwa: isStandalonePWA(),
-                    ...eventContext,
-                    ...utmParams,
-                    ...event.context,
-                },
-            }).catch((e) => console.error(e));
+  const trackEvent = useCallback(
+    (event: WebMixpanelEvent | MobileMixpanelEvent) => {
+      trackingService.trackEvent({
+        ...event,
+        context: {
+          ...eventContext,
+          ...event.context,
         },
-        [eventApiClient, eventContext]
-    );
+      });
+    },
+    [trackingService, eventContext]
+  );
 
-    const trackPageView = useCallback(
-        (event: MixpanelPageViewEvent) => {
-            // only send events on the client
-            if (typeof window === 'undefined') {
-                return;
-            }
-
-            const utmParams = extractUtmParams(window.location.search);
-
-            eventApiClient({
-                ...event,
-                name: 'Page view',
-                context: {
-                    pwa: isStandalonePWA(),
-                    ...utmParams,
-                    ...event.context,
-                },
-            }).catch((e) => console.error(e));
+  const trackPageView = useCallback(
+    (event: WebMixpanelPageViewEvent | MobileMixpanelPageViewEvent) => {
+      trackingService.trackPageView({
+        ...event,
+        context: {
+          ...event.context,
         },
-        [eventApiClient]
-    );
+      });
+    },
+    [trackingService]
+  );
 
-    useEffect(() => {
-        writeUtmParamsToSessionStorage(window.location.search);
-    }, []);
+  useEffect(() => {
+    if (disableSessionStorage) {
+      return;
+    }
 
-    return (
-        <MixpanelContext.Provider
-            value={{
-                trackEvent,
-                trackPageView,
-                setEventContext,
-            }}
-        >
-            {children}
-        </MixpanelContext.Provider>
-    );
+    writeUtmParamsToSessionStorage(window.location.search);
+  }, [disableSessionStorage]);
+
+  return (
+    <MixpanelContext.Provider
+      value={{
+        trackEvent,
+        trackPageView,
+        setEventContext,
+      }}>
+      {children}
+    </MixpanelContext.Provider>
+  );
 }
